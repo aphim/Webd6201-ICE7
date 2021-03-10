@@ -1,7 +1,8 @@
+"use strict";
+// Contact Class
 
-namespace core
-{
- export class Contact 
+((core)=>{
+  class Contact 
   {
     // Instance Variables
     private m_fullName: string;
@@ -125,5 +126,8 @@ namespace core
     }
   }
 
-}
+  core.Contact = Contact;
+
+})(core || (core={}));
+
 

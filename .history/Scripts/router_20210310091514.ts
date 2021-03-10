@@ -1,7 +1,7 @@
 
 namespace core
 {
-    export class Router {
+    class Router {
 
         private m_activeLink:string;
         private m_routingTable: string[];

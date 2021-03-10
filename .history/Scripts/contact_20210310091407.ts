@@ -1,7 +1,7 @@
 
 namespace core
 {
- export class Contact 
+  class Contact 
   {
     // Instance Variables
     private m_fullName: string;
@@ -124,6 +124,7 @@ namespace core
       this.EmailAddress = propertyArray[2];
     }
   }
+
 
 }
 
