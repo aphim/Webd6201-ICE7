@@ -50,6 +50,7 @@ function highlightActiveLink(link:string, data:string =""):void
       highlightActiveLink(link);
       router.LinkData = data;
       loadContent(router.ActiveLink, ActiveLinkCallBack(router.ActiveLink));
+      highlightActiveLink(link);
       history.pushState({},"", router.ActiveLink); // this replaces the url displayed in the browser
     }
 
@@ -427,7 +428,6 @@ function highlightActiveLink(link:string, data:string =""):void
 
       }
       addLinkEvents();
-      highlightActiveLink(router.ActiveLink);
     }
 
     function authGuard():void

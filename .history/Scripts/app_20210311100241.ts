@@ -1,42 +1,50 @@
-
 namespace core
 {
-function addLinkEvents():void
-{
-  $("ul>li>a").off("click");
-  $("ul>li>a").off("mouseover");
 
-  // loop through each anchor tag in the unordered list and
-  // add an event listener / handler to allow for 
-  // content injection
-  $("ul>li>a").on("click", function()
-  {
-    loadLink($(this).attr("id"));
-  });
+    function addLinkEvents():void
+    {
+      // remove all events first
+      $("ul>li>a").off("click");
+      $("ul>li>a").off("mouseover");
 
-  // make it look like each nav item is an active link
-  $("ul>li>a").on("mouseover", function()
-  {
-    $(this).css('cursor', 'pointer');
-  });
-}
+       // loop through each anchor tag in the unordered list and 
+        // add an event listener / handler to allow for 
+        // content injection
+        $("ul>li>a").on("click", function()
+        {
+          loadLink($(this).attr("id"));
+        });
 
-function highlightActiveLink(link:string, data:string =""):void
-{
-  $(`#${router.ActiveLink}`).removeClass("active"); // removes highlighted link
-      
-  if(link == "logout")
-  {
-    sessionStorage.clear();
-    router.ActiveLink = "login";
-  }
-  else
-  {
-    router.ActiveLink = link;
-  }
+        // make it look like each nav item is an active link
+        $("ul>li>a").on("mouseover", function()
+        {
+          $(this).css('cursor', 'pointer');
+        });
+    }
 
-  $(`#${router.ActiveLink}`).addClass("active"); // applies highlighted link to new page
-}
+    /**
+     * This function highlights the active link in the nav bar
+     *
+     * @param {string} link
+     * @param {string} [data=""]
+     */
+    function highlightActiveLink(link:string, data:string = ""):void
+    {
+      // swap active link
+      $(`#${router.ActiveLink}`).removeClass("active"); // removes highlighted link
+            
+      if(link == "logout")
+      {
+        sessionStorage.clear();
+        router.ActiveLink = "login";
+      }
+      else
+      {
+        router.ActiveLink = link;
+        router.LinkData = data;
+      }
+      $(`#${router.ActiveLink}`).addClass("active"); // applies highlighted link to new page
+    }
 
     /**
      * This function switches page content relative to the link that is passed into the function
@@ -47,12 +55,10 @@ function highlightActiveLink(link:string, data:string =""):void
      */
     function loadLink(link:string, data:string = ""):void
     {
-      highlightActiveLink(link);
-      router.LinkData = data;
+      highlightActiveLink(link, data);
       loadContent(router.ActiveLink, ActiveLinkCallBack(router.ActiveLink));
       history.pushState({},"", router.ActiveLink); // this replaces the url displayed in the browser
     }
-
 
     /**
      * Inject the Navigation bar into the Header element and highlight the active link based on the pageName parameter
@@ -65,8 +71,6 @@ function highlightActiveLink(link:string, data:string =""):void
       $.get("./Views/components/header.html", function(data)
       {
         $("header").html(data); // load the navigation bar
-        
-        toggleLogin(); // add login / logout and secure links
         
         $(`#${pageName}`).addClass("active"); // highlight active link
 
@@ -110,7 +114,7 @@ function highlightActiveLink(link:string, data:string =""):void
 
     function displayHome(): void
     {
-        
+   
     }
 
     function displayAbout(): void
@@ -395,39 +399,42 @@ function highlightActiveLink(link:string, data:string =""):void
 
     function toggleLogin(): void
     {
-      let contactListLink =$("#contactListLink")[0];
+      let contactListLink = $("#contactListLink")[0]; // makes a reference to the contact-list link
+
       // if user is logged in
       if(sessionStorage.getItem("user"))
-      {
+      { 
+
         // swap out the login link for logout
         $("#loginListItem").html(
         `<a id="logout" class="nav-link" aria-current="page"><i class="fas fa-sign-out-alt"></i> Logout</a>`
         );
-       
-        if(!contactListLink)
+
+        if(!contactListLink) // checks if contact-list link is not already present
         {
+          // add contact-list link
           $(`<li id="contactListLink" class="nav-item">
           <a id="contact-list" class="nav-link" aria-current="page"><i class="fas fa-users fa-lg"></i> Contact List</a>
         </li>`).insertBefore("#loginListItem");
         }
-
-      
       }
       else
-      {
+      { 
+
         // swap out the login link for logout
         $("#loginListItem").html(
           `<a id="login" class="nav-link" aria-current="page"><i class="fas fa-sign-in-alt"></i> Login</a>`
           );
-
-          if(contactListLink)
+          
+        if(contactListLink) // checks if contact-list link is present
         {
+          // remove contact-list link
           $("#contactListLink").remove();
         }
 
       }
+
       addLinkEvents();
-      highlightActiveLink(router.ActiveLink);
     }
 
     function authGuard():void
@@ -476,8 +483,6 @@ function highlightActiveLink(link:string, data:string =""):void
      */
     function Start(): void
     {
-        console.log("App Started...");
-
         loadHeader(router.ActiveLink);
       
         loadContent(router.ActiveLink, ActiveLinkCallBack(router.ActiveLink));

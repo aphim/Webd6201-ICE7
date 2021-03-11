@@ -33,6 +33,7 @@ function highlightActiveLink(link:string, data:string =""):void
   else
   {
     router.ActiveLink = link;
+    router.LinkData = data;
   }
 
   $(`#${router.ActiveLink}`).addClass("active"); // applies highlighted link to new page
@@ -47,8 +48,7 @@ function highlightActiveLink(link:string, data:string =""):void
      */
     function loadLink(link:string, data:string = ""):void
     {
-      highlightActiveLink(link);
-      router.LinkData = data;
+      highlightActiveLink(link, data);
       loadContent(router.ActiveLink, ActiveLinkCallBack(router.ActiveLink));
       history.pushState({},"", router.ActiveLink); // this replaces the url displayed in the browser
     }
@@ -427,7 +427,6 @@ function highlightActiveLink(link:string, data:string =""):void
 
       }
       addLinkEvents();
-      highlightActiveLink(router.ActiveLink);
     }
 
     function authGuard():void
