@@ -200,6 +200,7 @@ function highlightActiveLink(link:string, data:string =""):void
 
         $("#sendButton").on("click", (event)=> 
         {
+          event.preventDefault();
           let subscribeCheckbox = $("#subscribeCheckbox")[0] as HTMLInputElement;
           let fullName = $("#fullName")[0] as HTMLInputElement;
           let contactNumber = $("#contactNumber")[0] as HTMLInputElement;

@@ -48,7 +48,8 @@ function highlightActiveLink(link:string, data:string =""):void
      */
     function loadLink(link:string, data:string = ""):void
     {
-      highlightActiveLink(link, data);
+     
+      
       loadContent(router.ActiveLink, ActiveLinkCallBack(router.ActiveLink));
       history.pushState({},"", router.ActiveLink); // this replaces the url displayed in the browser
     }

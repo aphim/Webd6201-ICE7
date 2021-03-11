@@ -11,7 +11,7 @@ var core;
             $(this).css('cursor', 'pointer');
         });
     }
-    function loadLink(link, data = "") {
+    function highlightActiveLink(link, data = "") {
         $(`#${router.ActiveLink}`).removeClass("active");
         if (link == "logout") {
             sessionStorage.clear();
@@ -22,6 +22,9 @@ var core;
             router.LinkData = data;
         }
         $(`#${router.ActiveLink}`).addClass("active");
+    }
+    function loadLink(link, data = "") {
+        highlightActiveLink(link, data);
         loadContent(router.ActiveLink, ActiveLinkCallBack(router.ActiveLink));
         history.pushState({}, "", router.ActiveLink);
     }
