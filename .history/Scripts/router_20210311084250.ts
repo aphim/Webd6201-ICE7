@@ -1,11 +1,10 @@
 
 namespace core
 {
-    export class Router 
-    { 
-        // Instance Variables
-        private m_activeLink: string;
-        private m_linkData: string;
+    export class Router {
+
+        private m_activeLink:string;
+        private m_linkData;string;
         private m_routingTable: string[];
 
         // constructors
@@ -15,7 +14,7 @@ namespace core
         }
 
         // Public Properties (getters and setters)
-        get ActiveLink(): string 
+        get ActiveLink() :string
         {
             return this.m_activeLink;
         }
@@ -32,7 +31,7 @@ namespace core
 
         set LinkData(data:string)
         {
-            this.m_linkData = data;
+            this.m_linkData = link;
         }
 
         // Public methods
@@ -55,7 +54,7 @@ namespace core
          * @param {string} routingTable
          * @returns {void}
          */
-        public AddTable(routingTable: string[]) :void
+        public AddTable(routingTable:string[]) :void
         {
             this.m_routingTable = routingTable;
         }
@@ -67,7 +66,7 @@ namespace core
          * @param {string} route
          * @returns {number}
          */
-        public Find(route:string) :number
+        public Find(route:string): number
         {
             return this.m_routingTable.indexOf(route);
         }
@@ -80,7 +79,7 @@ namespace core
          * @param {string} route
          * @returns {boolean}
          */
-        public Remove(route:string) :boolean
+        public Remove(route:string): boolean
         {
             if (this.Find(route) > -1) {
                 this.m_routingTable.splice(this.Find(route), 1);
@@ -102,7 +101,8 @@ namespace core
 
 }
 
-//TODO: need to move the code below into its own file
+
+//TODO move code below to different file
 let router = new core.Router();
 router.AddTable(["/", 
                  "/home", 
@@ -127,3 +127,5 @@ else
 {
     router.ActiveLink = "404";
 }
+
+

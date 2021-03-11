@@ -1,53 +1,17 @@
 
 namespace core
 {
-function addLinkEvents():void
+
+function loadLink(link:string):void
 {
-  $("ul>li>a").off("click");
-  $("ul>li>a").off("mouseover");
-
-  // loop through each anchor tag in the unordered list and
-  // add an event listener / handler to allow for 
-  // content injection
-  $("ul>li>a").on("click", function()
-  {
-    loadLink($(this).attr("id"));
-  });
-
-  // make it look like each nav item is an active link
-  $("ul>li>a").on("mouseover", function()
-  {
-    $(this).css('cursor', 'pointer');
-  });
+  $(`#${router.ActiveLink}`).removeClass("active"); // removes highlighted link
+  router.ActiveLink = $(this).attr("id");
+  loadContent(router.ActiveLink, ActiveLinkCallBack(router.ActiveLink));
+  $(`#${router.ActiveLink}`).addClass("active"); // applies highlighted link to new page
+  history.pushState({},"", router.ActiveLink); // this replaces the url displayed in the browser
 }
 
-    /**
-     * This function switches page content relative to the link that is passed into the function
-     * optionally, link data can be also be passed 
-     *
-     * @param {string} link
-     * @param {string} [data=""]
-     */
-    function loadLink(link:string, data:string = ""):void
-    {
-      $(`#${router.ActiveLink}`).removeClass("active"); // removes highlighted link
-      
-      if(link == "logout")
-      {
-        sessionStorage.clear();
-        router.ActiveLink = "login";
-      }
-      else
-      {
-        router.ActiveLink = link;
-        router.LinkData = data;
-      }
 
-      $(`#${router.ActiveLink}`).addClass("active"); // applies highlighted link to new page
-      
-      loadContent(router.ActiveLink, ActiveLinkCallBack(router.ActiveLink));
-      history.pushState({},"", router.ActiveLink); // this replaces the url displayed in the browser
-    }
 
 
     /**
@@ -66,7 +30,19 @@ function addLinkEvents():void
         
         $(`#${pageName}`).addClass("active"); // highlight active link
 
-        addLinkEvents();
+        // loop through each anchor tag in the unordered list and 
+        // add an event listener / handler to allow for 
+        // content injection
+        $("a").on("click", function()
+        {
+         loadLink($(this).attr("id"));
+        });
+
+        // make it look like each nav item is an active link
+        $("a").on("mouseover", function()
+        {
+          $(this).css('cursor', 'pointer');
+        });
         
       });
     }
@@ -85,15 +61,13 @@ function addLinkEvents():void
       {
         $("main").html(data);
 
-        toggleLogin();
         callback();
       });
       
     }
 
     /**
-     * This function loads the page footer
-     *
+     * This function displays the footer
      */
     function loadFooter():void
     {
@@ -104,27 +78,28 @@ function addLinkEvents():void
       });
     }
 
-    function displayHome(): void
+    function displayHome():void
     {
+      console.log("Home page function called");
         
     }
 
-    function displayAbout(): void
+    function displayAbout():void
     {
 
     }
 
-    function displayProjects(): void
+    function displayProjects():void
     {
 
     }
 
-    function displayServices(): void
+    function displayServices():void
     {
 
     }
 
-    function testFullName(): void
+    function testFullName():void
     {
       let messageArea = $("#messageArea").hide();
       let fullNamePattern = /([A-Z][a-z]{1,25})+(\s|,|-)([A-Z][a-z]{1,25})+(\s|,|-)*/;
@@ -144,7 +119,7 @@ function addLinkEvents():void
         });
     }
 
-    function testContactNumber(): void
+    function testContactNumber():void
     {
       let messageArea = $("#messageArea");
       let contactNumberPattern = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
@@ -189,7 +164,7 @@ function addLinkEvents():void
       testEmailAddress();
     }
 
-    function displayContact(): void
+    function displayContact():void
     {
       // form validation
       formValidation();
@@ -253,7 +228,7 @@ function addLinkEvents():void
         contactList.innerHTML = data;
 
         $("button.edit").on("click", function(){
-          loadLink("edit", $(this).val().toString());
+          location.href = "/edit#" + $(this).val();
          });
 
          $("button.delete").on("click", function(){
@@ -261,19 +236,19 @@ function addLinkEvents():void
            {
             localStorage.removeItem($(this).val().toString());
            }
-           loadLink("contact-list"); // refresh the page
+           location.href = "/contact-list"; // refresh the page
          });
 
          $("#addButton").on("click", function() 
          {
-          loadLink("edit");
+          location.href = "/edit";
          });
       }
     }
 
-    function displayEdit(): void
+    function displayEdit():void
     {
-      let key = router.LinkData;
+      let key = location.hash.substring(1);
 
       let contact = new core.Contact();
 
@@ -317,14 +292,15 @@ function addLinkEvents():void
           localStorage.setItem(key, contact.serialize());
 
           // return to the contact list
-          loadLink("contact-list");
+          location.href = "/contact-list";
           
         });
+   
 
       $("#cancelButton").on("click", function()
       {
         // return to the contact list
-        loadLink("contact-list");
+        location.href = "/contact-list";
       });
     }
 
@@ -364,7 +340,7 @@ function addLinkEvents():void
             messageArea.removeAttr("class").hide();
 
             // redirect user to secure area - contact-list.html
-            loadLink("contact-list");
+            location.href = "/contact-list";
           }
           else
           {
@@ -380,18 +356,17 @@ function addLinkEvents():void
         // clear the login form
         document.forms[0].reset();
         // return to the home page
-        loadLink("home");
+        location.href = "/home";
       });
     }
 
-    function displayRegister(): void
+    function displayRegister():void
     {
 
     }
 
-    function toggleLogin(): void
+    function toggleLogin():void
     {
-      let contactListLink =$("#contactListLink")[0];
       // if user is logged in
       if(sessionStorage.getItem("user"))
       {
@@ -399,14 +374,25 @@ function addLinkEvents():void
         $("#loginListItem").html(
         `<a id="logout" class="nav-link" aria-current="page"><i class="fas fa-sign-out-alt"></i> Logout</a>`
         );
-       
-        if(!contactListLink)
-        {
-          $(`<li id="contactListLink" class="nav-item">
-          <a id="contact-list" class="nav-link" aria-current="page"><i class="fas fa-users fa-lg"></i> Contact List</a>
-        </li>`).insertBefore("#loginListItem");
-        }
 
+        $("#logout").on("click", function()
+        {
+          // perform logout
+          sessionStorage.clear();
+
+          // redirect back to login
+          location.href = "/login";
+        });
+
+        // make it look like each nav item is an active link
+        $("#logout").on("mouseover", function()
+        {
+          $(this).css('cursor', 'pointer');
+        });
+       
+        $(`<li class="nav-item">
+        <a id="contact-list" class="nav-link" aria-current="page"><i class="fas fa-users fa-lg"></i> Contact List</a>
+      </li>`).insertBefore("#loginListItem");
       
       }
       else
@@ -415,14 +401,7 @@ function addLinkEvents():void
         $("#loginListItem").html(
           `<a id="login" class="nav-link" aria-current="page"><i class="fas fa-sign-in-alt"></i> Login</a>`
           );
-
-          if(contactListLink)
-        {
-          $("#contactListLink").remove();
-        }
-
       }
-      addLinkEvents();
     }
 
     function authGuard():void
@@ -430,7 +409,7 @@ function addLinkEvents():void
       if(!sessionStorage.getItem("user"))
       {
       // redirect back to login page
-      loadLink("login");
+      location.href = "/login";
       }
     }
 
@@ -438,14 +417,12 @@ function addLinkEvents():void
     {
 
     }
-
-    /**
-     * This function associates and returns a related callback to a route
-     *
-     * @param {string} activeLink
-     * @returns {Function}
-     */
-    function ActiveLinkCallBack(activeLink:string): Function
+/**
+ * This function associates and returns a related callback to a route
+ * @param activeLink 
+ * @returns 
+ */
+    function ActiveLinkCallBack(activeLink:string):Function
     {
       switch (activeLink) 
       {
@@ -466,10 +443,9 @@ function addLinkEvents():void
     }
 
     /**
-     * This is the entry point for our program
-     *
+     * Entry point to our program
      */
-    function Start(): void
+    function Start():void
     {
         console.log("App Started...");
 

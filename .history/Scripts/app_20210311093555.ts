@@ -43,9 +43,8 @@ function addLinkEvents():void
         router.LinkData = data;
       }
 
-      $(`#${router.ActiveLink}`).addClass("active"); // applies highlighted link to new page
-      
       loadContent(router.ActiveLink, ActiveLinkCallBack(router.ActiveLink));
+      $(`#${router.ActiveLink}`).addClass("active"); // applies highlighted link to new page
       history.pushState({},"", router.ActiveLink); // this replaces the url displayed in the browser
     }
 
@@ -106,22 +105,23 @@ function addLinkEvents():void
 
     function displayHome(): void
     {
+      console.log("Home page function called");
         
     }
 
     function displayAbout(): void
     {
-
+      console.log("About page function called");
     }
 
     function displayProjects(): void
     {
-
+      console.log("Project page function called");
     }
 
     function displayServices(): void
     {
-
+      console.log("Services page function called");
     }
 
     function testFullName(): void

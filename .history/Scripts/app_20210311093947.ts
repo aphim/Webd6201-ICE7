@@ -106,22 +106,23 @@ function addLinkEvents():void
 
     function displayHome(): void
     {
+      console.log("Home page function called");
         
     }
 
     function displayAbout(): void
     {
-
+      console.log("About page function called");
     }
 
     function displayProjects(): void
     {
-
+      console.log("Project page function called");
     }
 
     function displayServices(): void
     {
-
+      console.log("Services page function called");
     }
 
     function testFullName(): void

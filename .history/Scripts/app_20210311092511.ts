@@ -30,8 +30,6 @@ function addLinkEvents():void
      */
     function loadLink(link:string, data:string = ""):void
     {
-      $(`#${router.ActiveLink}`).removeClass("active"); // removes highlighted link
-      
       if(link == "logout")
       {
         sessionStorage.clear();
@@ -43,9 +41,11 @@ function addLinkEvents():void
         router.LinkData = data;
       }
 
-      $(`#${router.ActiveLink}`).addClass("active"); // applies highlighted link to new page
-      
+      $(`#${router.ActiveLink}`).removeClass("active"); // removes highlighted link
+      router.ActiveLink = link;
+      router.LinkData = data;
       loadContent(router.ActiveLink, ActiveLinkCallBack(router.ActiveLink));
+      $(`#${router.ActiveLink}`).addClass("active"); // applies highlighted link to new page
       history.pushState({},"", router.ActiveLink); // this replaces the url displayed in the browser
     }
 
@@ -106,6 +106,7 @@ function addLinkEvents():void
 
     function displayHome(): void
     {
+      console.log("Home page function called");
         
     }
 
@@ -415,10 +416,12 @@ function addLinkEvents():void
         $("#loginListItem").html(
           `<a id="login" class="nav-link" aria-current="page"><i class="fas fa-sign-in-alt"></i> Login</a>`
           );
-
+          
           if(contactListLink)
         {
-          $("#contactListLink").remove();
+          $(`<li id="contactListLink" class="nav-item">
+          <a id="contact-list" class="nav-link" aria-current="page"><i class="fas fa-users fa-lg"></i> Contact List</a>
+        </li>`).insertBefore("#loginListItem");
         }
 
       }
